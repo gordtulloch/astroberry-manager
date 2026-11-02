@@ -34,6 +34,7 @@ from threading import Event
 from flask import Flask, render_template, redirect, url_for, request, session, send_file, make_response
 from flask_socketio import SocketIO
 
+from .secret import load_secret_key
 from .time import getTime
 from .location import getLocation
 from .weather import getWeather
@@ -56,7 +57,8 @@ app_port = 8080
 
 # main app
 app = Flask(__name__, static_folder='assets')
-app.secret_key = os.getenv('APP_KEY', 'e55325c30acadadaae4006cf80c6439502043408f792afe57f501c2db4a0fc22')
+app.secret_key = load_secret_key()
+app.config.update(SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Lax')
 socketio = SocketIO(app)
 
 # Setup logger
